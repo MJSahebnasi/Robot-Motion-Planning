@@ -26,6 +26,6 @@ if __name__ == "__main__":
         
         # DEFINE STATE MACHINE HERE!
 
-        update_motor_speed(input_omega=[0,0,0])
+        update_motor_speed(input_omega=[0,5,-5])
         
     pass
