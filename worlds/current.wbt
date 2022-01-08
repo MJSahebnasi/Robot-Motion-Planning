@@ -12,7 +12,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0 1 0 0
-  position 1.1950229942448491 -9.678008401163273 22.350640677809018
+  position 1.1950229942448491 -9.678008401163273 13.676904798528051
 }
 TexturedBackground {
 }
@@ -373,7 +373,7 @@ Robot {
           name "distance_sensor3"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
@@ -405,7 +405,7 @@ Robot {
           name "distance_sensor6"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
@@ -437,7 +437,7 @@ Robot {
           name "distance_sensor1"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
@@ -469,7 +469,7 @@ Robot {
           name "distance_sensor4"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
@@ -501,7 +501,7 @@ Robot {
           name "distance_sensor5"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
@@ -533,7 +533,7 @@ Robot {
           name "distance_sensor2"
           lookupTable [
             0.02 0 0
-            0.3 1000 0
+            0.9 1000 0
           ]
           type "infra-red"
         }
