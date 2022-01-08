@@ -16,16 +16,10 @@ if __name__ == "__main__":
 
     goal_postition = np.array([0, 0])
 
-    # DEFINE STATES HERE!
-
     while robot.step(TIME_STEP) != -1:
         gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
         update_robot_state()
 
-        # DEFINE STATE MACHINE HERE!
-
-        # update_motor_speed(input_omega=[5, 5, 0])
-        # inplace_rotate(get_bearing_in_degrees(compass_val), 75)
-        move_forward()
+        
 
     pass

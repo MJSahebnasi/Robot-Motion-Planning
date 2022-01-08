@@ -8,11 +8,11 @@ from controller import Display
 import math
 import numpy as np
 
-WHEEL_RADIUS = 0.029 
-CHASSIS_AXLE_LENGTH = 0.22 
+WHEEL_RADIUS = 0.029
+CHASSIS_AXLE_LENGTH = 0.22
 
 wheel_cirum = 2 * math.pi * WHEEL_RADIUS
-encoder_unit = wheel_cirum / (2*math.pi)
+encoder_unit = wheel_cirum / (2 * math.pi)
 
 gps = None
 compass = None
@@ -41,7 +41,6 @@ robot_omega = np.array([0.0, 0.0, 0.0])
 
 
 def init_robot(time_step=32):
-
     global gps
     global compass
     global motor_1
@@ -62,14 +61,14 @@ def init_robot(time_step=32):
 
     # create the Robot instance.
     robot = Robot()
-    
+
     # get the time step of the current world.
     TIME_STEP = 32
 
     # define robot motors
     motor_1 = robot.getDevice("motor_1")
     motor_2 = robot.getDevice("motor_2")
-    motor_3 = robot.getDevice("motor_3")  
+    motor_3 = robot.getDevice("motor_3")
 
     # set position for robot motors
     motor_1.setPosition(float('inf'))
@@ -94,7 +93,7 @@ def init_robot(time_step=32):
     # define position sensors
     pos_1 = robot.getDevice("pos_1")
     pos_2 = robot.getDevice("pos_2")
-    pos_3 = robot.getDevice("pos_3")  
+    pos_3 = robot.getDevice("pos_3")
 
     # enable position sensors
     pos_1.enable(time_step)
@@ -117,9 +116,8 @@ def init_robot(time_step=32):
     ir_5.enable(time_step)
     ir_6.enable(time_step)
 
-
     wheel_cirum = 2 * math.pi * WHEEL_RADIUS
-    encoder_unit = wheel_cirum / (2*math.pi)
+    encoder_unit = wheel_cirum / (2 * math.pi)
 
     # define and enable lidar sensors
     # lidar = robot.getDevice("head_hokuyo_sensor");
@@ -135,8 +133,8 @@ def init_robot(time_step=32):
 
     return robot
 
-def read_sensors_values():
 
+def read_sensors_values():
     global gps_values
     global compass_val
     global sonar_value
@@ -150,22 +148,25 @@ def read_sensors_values():
     compass_val = compass.getValues()
 
     # read sonar sensors values
-    sonar_value = np.array([sonar_3.getValue(),sonar_1.getValue(),sonar_2.getValue()])
-    
+    sonar_value = np.array([sonar_3.getValue(), sonar_1.getValue(), sonar_2.getValue()])
+
     # read position sensors values
-    position_value = encoder_unit*np.array([pos_1.getValue(),pos_2.getValue(),pos_3.getValue()])
-    
+    position_value = encoder_unit * np.array([pos_1.getValue(), pos_2.getValue(), pos_3.getValue()])
+
     # read infra-red sensors values
-    ir_value = np.array([ir_1.getValue(),ir_2.getValue(), ir_3.getValue(), ir_4.getValue(), ir_5.getValue(), ir_6.getValue()])
+    ir_value = np.array(
+        [ir_1.getValue(), ir_2.getValue(), ir_3.getValue(), ir_4.getValue(), ir_5.getValue(), ir_6.getValue()])
 
-    return gps_values,compass_val,sonar_value,position_value,ir_value
+    return gps_values, compass_val, sonar_value, position_value, ir_value
 
-def init_robot_state(in_pos=robot_position,in_omega=robot_omega):
+
+def init_robot_state(in_pos=robot_position, in_omega=robot_omega):
     global robot_position
     global robot_omega
     # define robot state here
     robot_position = in_pos
-    robot_omega    = in_omega
+    robot_omega = in_omega
+
 
 def update_robot_state():
     global robot_velocity
@@ -173,10 +174,11 @@ def update_robot_state():
     global robot_omega
     # updating the current theta
     robot_position[2] = math.atan2(compass_val[0], compass_val[1])
-    
+
     # updating the currnet robot position
     robot_position[0] = gps_values[0]
     robot_position[1] = gps_values[1]
+
 
 def update_motor_speed(input_omega=robot_omega):
     motor_1.setVelocity(input_omega[0])
