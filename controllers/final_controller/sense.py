@@ -12,6 +12,7 @@ def get_bearing_in_degrees(compass_val):
 
 
 def avoid_wall_in_front(front_sonar_val):
+    # IR is no good here
     if front_sonar_val < 180:
         # stop
         update_motor_speed(input_omega=[0, 0, 0])
