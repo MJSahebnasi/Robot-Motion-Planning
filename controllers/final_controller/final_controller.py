@@ -6,6 +6,7 @@
 import numpy as np
 from initialization import *
 from motion import *
+from sense import *
 
 if __name__ == "__main__":
 
@@ -23,8 +24,8 @@ if __name__ == "__main__":
 
         # DEFINE STATE MACHINE HERE!
 
-        # update_motor_speed(input_omega=[0,5,-5])
-        # inplace_rotate()
+        # update_motor_speed(input_omega=[5, 5, 0])
+        # inplace_rotate(get_bearing_in_degrees(compass_val), 75)
         move_forward()
 
     pass
