@@ -14,12 +14,13 @@ if __name__ == "__main__":
     robot = init_robot(time_step=TIME_STEP)
     init_robot_state(in_pos=[0, 0, 0], in_omega=[0, 0, 0])
 
-    goal_postition = np.array([0, 0])
+    goal_position = np.array([1.3, 6.15])  # <x,y>
 
     while robot.step(TIME_STEP) != -1:
         gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
-        update_robot_state()
+        # update_robot_state()
 
-        
+        head_to_destination(get_bearing_in_degrees(compass_val), gps_values, goal_position)
+        print(gps_values)
 
     pass
