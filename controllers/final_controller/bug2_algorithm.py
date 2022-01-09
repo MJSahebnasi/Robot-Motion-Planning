@@ -1,6 +1,15 @@
+from enum import Enum
 from initialization import *
 from motion import *
 from sense import *
+
+class State(Enum):
+    init = 1
+    line_follow = 2
+    get_parallel_to_wall = 3
+    wall_follow = 4
+
+
 
 goal_position = np.array([1.3, 6.15])  # <x,y>
 initial_position = np.array([1.3, -9.74])
@@ -34,9 +43,9 @@ def set_state():
 
     wall_in_front = avoid_wall_in_front(sonar_value[1])
 
-    if bug2.state == 'line_follow' and wall_in_front:
+    if bug2.state == State.line_follow and wall_in_front:
         bug2.prev_state = bug2.state
-        bug2.state = 'get_parallel_to_wall'
+        bug2.state = State.get_parallel_to_wall
 
         # set rotate_final_degree
         rotation_dir = choice(['left', 'right'])
@@ -59,24 +68,35 @@ def bug2():
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
 
+    print('sonar: ', sonar_value)
+    print('ir: ', ir_value)
+    print('-----')
+
     global robot_heading
     robot_heading = get_bearing_in_degrees(compass_val)
 
-    if not bug2.state == 'init':
+    if not bug2.state == State.init:
         set_state()
 
-    if bug2.state == 'init':
+    if bug2.state == State.init:
         if head_to_destination(robot_heading, gps_values, goal_position):
             bug2.prev_state = bug2.state
-            bug2.state = 'line_follow'
-    elif bug2.state == 'line_follow':
+            bug2.state = State.line_follow
+    elif bug2.state == State.line_follow:
         move_forward()
-    elif bug2.state == 'get_parallel_to_wall':
+    elif bug2.state == State.get_parallel_to_wall:
+        done = False
         if rotation_dir == 'left':
-            inplace_rotate(robot_heading, rotate_final_degree)
+            done = inplace_rotate(robot_heading, rotate_final_degree)
         else:
-            inplace_rotate(robot_heading, rotate_final_degree, -1)
+            done = inplace_rotate(robot_heading, rotate_final_degree, -1)
+        if done:
+            bug2.prev_state = bug2.state
+            bug2.state = State.wall_follow
+    elif bug2.state == State.wall_follow:
+        # wall_follow()
 
 
-bug2.state = 'init'
-bug2.prev_state = 'init'
+
+bug2.state = State.init
+bug2.prev_state = State.init
