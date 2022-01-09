@@ -1,5 +1,3 @@
-from random import choice
-
 from initialization import *
 
 speed = 7
@@ -10,7 +8,7 @@ def move_forward():
     update_motor_speed(input_omega=[-speed, speed, 0])
 
 
-""" :param clockwise: -1 | anti-clockwise : 1 """
+""" :param clockwise: 1 | anti-clockwise : -1 """
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
@@ -29,3 +27,11 @@ def head_to_destination(theta, robot_position, goal_position):
     rotation_val = rotation_val / math.pi * 180.0
 
     return inplace_rotate(theta, rotation_val)
+
+
+def turn_corner_left():
+    update_motor_speed(input_omega=[-speed, 4 * speed // 5, -speed])
+
+
+def turn_corner_right():
+    update_motor_speed(input_omega=[-4 * speed // 5, speed, speed])
