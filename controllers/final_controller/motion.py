@@ -14,8 +14,7 @@ def move_forward():
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
-    # buggy when dest == 0
-    if abs(destination_degree - current_heading_degree) > 1 or abs(destination_degree - current_heading_degree) >= 359:
+    if abs(destination_degree - current_heading_degree) >= 1 or abs(destination_degree - current_heading_degree) >= 359:
         update_motor_speed(input_omega=[rotate_speed * direction, rotate_speed * direction, rotate_speed * direction])
         return False
     else:
