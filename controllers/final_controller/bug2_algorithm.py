@@ -20,17 +20,30 @@ sonar_value = None
 encoder_value = None
 ir_value = None
 
+rotate_final_degree = None
+rotation_dir = None
+
 
 def set_state():
     global wall_in_front
     global wall_to_right
     global wall_to_left
 
+    global rotation_dir
+    global rotate_final_degree
+
     wall_in_front = avoid_wall_in_front(sonar_value[1])
 
     if bug2.state == 'line_follow' and wall_in_front:
         bug2.prev_state = bug2.state
         bug2.state = 'get_parallel_to_wall'
+
+        # set rotate_final_degree
+        rotation_dir = choice(['left', 'right'])
+        if rotation_dir == 'left':
+            rotate_final_degree = (robot_heading - 90) % 360
+        else:
+            rotate_final_degree = (robot_heading + 90) % 360
 
 
 def bug2():
@@ -59,7 +72,10 @@ def bug2():
     elif bug2.state == 'line_follow':
         move_forward()
     elif bug2.state == 'get_parallel_to_wall':
-        inplace_rotate(robot_heading, 180)
+        if rotation_dir == 'left':
+            inplace_rotate(robot_heading, rotate_final_degree)
+        else:
+            inplace_rotate(robot_heading, rotate_final_degree, -1)
 
 
 bug2.state = 'init'
