@@ -12,7 +12,7 @@ def move_forward():
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
-    if abs(destination_degree - current_heading_degree) >= 1 or abs(destination_degree - current_heading_degree) >= 359:
+    if abs(destination_degree - current_heading_degree) > 0.5 or abs(destination_degree - current_heading_degree) > 359.5:
         update_motor_speed(input_omega=[rotate_speed * direction, rotate_speed * direction, rotate_speed * direction])
         return False
     else:

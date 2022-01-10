@@ -24,27 +24,33 @@ def wall_follow():
     elif bug2_algorithm.wall_in_front and wall_to_left:
         # rotation_dir = 'right'
         rotate_final_degree = (bug2_algorithm.robot_heading - 90) % 360
-
-        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree, -1)
+        # BUG:
+        # this code needs separate state and execution parts as well
+        # cannot set rotate_final_degree every time
+        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
+        bug2_algorithm.is_rotating = True
 
         if done:
+            bug2_algorithm.is_rotating = False
             bug2_algorithm.wall_in_front = False
             previously_wall_to_right = False
             previously_wall_to_left = True
-            wall_follow.wall_to_right = False
-            wall_follow.wall_to_left = True
+            wall_to_right = False
+            wall_to_left = True
     elif bug2_algorithm.wall_in_front and wall_to_right:
         # rotation_dir = 'left'
         rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
 
-        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree, -1)
+        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
+        bug2_algorithm.is_rotating = True
 
         if done:
+            bug2_algorithm.is_rotating = True
             bug2_algorithm.wall_in_front = False
             previously_wall_to_right = True
             previously_wall_to_left = False
-            wall_follow.wall_to_right = True
-            wall_follow.wall_to_left = False
+            wall_to_right = True
+            wall_to_left = False
     elif not bug2_algorithm.wall_in_front and not (wall_to_left or wall_to_right):
         if previously_wall_to_right:
             motion.turn_corner_right()

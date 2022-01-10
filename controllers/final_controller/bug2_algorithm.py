@@ -21,8 +21,8 @@ initial_position = np.array([1.3, -9.74])
 threshold = 0.08
 
 # head: sonar[1], ir[0], ir[3]
-# front right : ir[5]
-# front left : ir[0]
+# right front : ir[5]
+# left front : ir[1]
 
 robot_heading = None
 
@@ -36,50 +36,53 @@ ir_value = None
 
 rotate_final_degree = None
 rotation_dir = None
+is_rotating = False
 
 
 def set_state():
     global rotation_dir
     global rotate_final_degree
+    global is_rotating
 
     # any wall around?
     global wall_in_front
-    wall_in_front = avoid_wall_in_front(sonar_value[1])
+    if not is_rotating:
+        wall_in_front = avoid_wall_in_front(sonar_value[1])
 
     # front-right IR
     if ir_value[5] < 1000:
         wall_follow.wall_to_right = True
-    else:
-        if wall_follow.wall_to_right:
-            wall_follow.previously_wall_to_right = True
-        wall_follow.wall_to_right = False
+    # elif not is_rotating:
+    #     if wall_follow.wall_to_right:
+    #         wall_follow.previously_wall_to_right = True
+    #     wall_follow.wall_to_right = False
 
     # front-left IR
-    if ir_value[0] < 1000:
+    if ir_value[1] < 1000:
         wall_follow.wall_to_left = True
-    else:
-        if wall_follow.wall_to_left:
-            wall_follow.previously_wall_to_left = True
-        wall_follow.wall_to_left = False
+    # elif not is_rotating:
+    #     if wall_follow.wall_to_left:
+    #         wall_follow.previously_wall_to_left = True
+    #     wall_follow.wall_to_left = False
 
     if bug2.state == State.line_follow and wall_in_front:
         bug2.prev_state = bug2.state
         bug2.state = State.get_parallel_to_wall
+        is_rotating = True
 
         # set rotate_final_degree
         rotation_dir = choice(['left', 'right'])
+        rotation_dir = 'right'
         if rotation_dir == 'left':
             rotate_final_degree = (robot_heading + 90) % 360
-            wall_follow.wall_to_right = False
-            wall_follow.wall_to_left = True
         else:
             rotate_final_degree = (robot_heading - 90) % 360
-            wall_follow.wall_to_right = True
-            wall_follow.wall_to_left = False
 
 
 def bug2():
     global wall_in_front
+
+    global is_rotating
 
     global gps_values
     global compass_val
@@ -91,12 +94,6 @@ def bug2():
         return
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
-
-    print('sonar: ', sonar_value)
-    print('ir: ', ir_value)
-    print('wall left: ', wall_follow.wall_to_left)
-    print('wall right: ', wall_follow.wall_to_right)
-    print('-----')
 
     global robot_heading
     robot_heading = get_bearing_in_degrees(compass_val)
@@ -113,14 +110,30 @@ def bug2():
     elif bug2.state == State.get_parallel_to_wall:
         if rotation_dir == 'left':
             done = motion.inplace_rotate(robot_heading, rotate_final_degree, -1)
+            print('left')
         else:
             done = motion.inplace_rotate(robot_heading, rotate_final_degree)
+            print('right')
         if done:
+            wall_in_front = False
+            is_rotating = False
+            if rotation_dir == 'left':
+                wall_follow.wall_to_right = True
+            else:
+                wall_follow.wall_to_left = True
             bug2.prev_state = bug2.state
             bug2.state = State.wall_follow
-            wall_in_front = False
     elif bug2.state == State.wall_follow:
         wall_follow.wall_follow()
+
+    # print('sonar: ', sonar_value)
+    # print('ir: ', ir_value)
+    print(bug2.state)
+    print('heading: ', robot_heading)
+    print('wall left: ', wall_follow.wall_to_left)
+    print('wall right: ', wall_follow.wall_to_right)
+    print('wall front: ', wall_in_front)
+    print('-----')
 
 
 bug2.state = State.init
