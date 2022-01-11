@@ -1,12 +1,14 @@
 from random import choice
 from enum import Enum
+
+import sense
 from initialization import *
 import motion
 from sense import *
 import wall_follow
 
 
-class State(Enum):
+class Bug2_State(Enum):
     init = 1
     line_follow = 2
     get_parallel_to_wall = 3
@@ -36,38 +38,42 @@ ir_value = None
 
 rotate_final_degree = None
 rotation_dir = None
+# NEVER update stuff when robot is rotating
 is_rotating = False
 
 
-def set_state():
+def setup():
     global rotation_dir
     global rotate_final_degree
     global is_rotating
 
-    # any wall around?
     global wall_in_front
+
+    global robot_heading
+    robot_heading = get_bearing_in_degrees(compass_val)
+
+    # NEVER update stuff when robot is rotating
     if not is_rotating:
+        # any wall around?
         wall_in_front = avoid_wall_in_front(sonar_value[1])
+        # front-right IR
+        if ir_value[5] < 1000:
+            wall_follow.wall_to_right = True
+        else:
+            if wall_follow.wall_to_right:
+                wall_follow.previously_wall_to_right = True
+                wall_follow.wall_to_right = False
+        # front-left IR
+        if ir_value[1] < 1000:
+            wall_follow.wall_to_left = True
+        else:
+            if wall_follow.wall_to_left:
+                wall_follow.previously_wall_to_left = True
+                wall_follow.wall_to_left = False
 
-    # front-right IR
-    if ir_value[5] < 1000:
-        wall_follow.wall_to_right = True
-    # elif not is_rotating:
-    #     if wall_follow.wall_to_right:
-    #         wall_follow.previously_wall_to_right = True
-    #     wall_follow.wall_to_right = False
-
-    # front-left IR
-    if ir_value[1] < 1000:
-        wall_follow.wall_to_left = True
-    # elif not is_rotating:
-    #     if wall_follow.wall_to_left:
-    #         wall_follow.previously_wall_to_left = True
-    #     wall_follow.wall_to_left = False
-
-    if bug2.state == State.line_follow and wall_in_front:
+    if bug2.state == Bug2_State.line_follow and wall_in_front:
         bug2.prev_state = bug2.state
-        bug2.state = State.get_parallel_to_wall
+        bug2.state = Bug2_State.get_parallel_to_wall
         is_rotating = True
 
         # set rotate_final_degree
@@ -90,30 +96,24 @@ def bug2():
     global encoder_value
     global ir_value
 
-    if bug2.state == State.reached_destination or bug2.state == State.cannot_reach_destination:
+    if bug2.state == Bug2_State.reached_destination or bug2.state == Bug2_State.cannot_reach_destination:
         return
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
 
-    global robot_heading
-    robot_heading = get_bearing_in_degrees(compass_val)
+    setup()
 
-    if not bug2.state == State.init:
-        set_state()
-
-    if bug2.state == State.init:
+    if bug2.state == Bug2_State.init:
         if motion.head_to_destination(robot_heading, gps_values, goal_position):
             bug2.prev_state = bug2.state
-            bug2.state = State.line_follow
-    elif bug2.state == State.line_follow:
+            bug2.state = Bug2_State.line_follow
+    elif bug2.state == Bug2_State.line_follow:
         motion.move_forward()
-    elif bug2.state == State.get_parallel_to_wall:
+    elif bug2.state == Bug2_State.get_parallel_to_wall:
         if rotation_dir == 'left':
             done = motion.inplace_rotate(robot_heading, rotate_final_degree, -1)
-            print('left')
         else:
             done = motion.inplace_rotate(robot_heading, rotate_final_degree)
-            print('right')
         if done:
             wall_in_front = False
             is_rotating = False
@@ -122,8 +122,8 @@ def bug2():
             else:
                 wall_follow.wall_to_left = True
             bug2.prev_state = bug2.state
-            bug2.state = State.wall_follow
-    elif bug2.state == State.wall_follow:
+            bug2.state = Bug2_State.wall_follow
+    elif bug2.state == Bug2_State.wall_follow:
         wall_follow.wall_follow()
 
     # print('sonar: ', sonar_value)
@@ -136,5 +136,5 @@ def bug2():
     print('-----')
 
 
-bug2.state = State.init
-bug2.prev_state = State.init
+bug2.state = Bug2_State.init
+bug2.prev_state = Bug2_State.init

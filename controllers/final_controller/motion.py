@@ -1,4 +1,6 @@
+import bug2_algorithm
 from initialization import *
+import sense
 
 speed = 7
 rotate_speed = 4
@@ -12,7 +14,7 @@ def move_forward():
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
-    if abs(destination_degree - current_heading_degree) > 0.5 or abs(destination_degree - current_heading_degree) > 359.5:
+    if sense.degrees_equal(current_heading_degree, destination_degree):
         update_motor_speed(input_omega=[rotate_speed * direction, rotate_speed * direction, rotate_speed * direction])
         return False
     else:
@@ -29,9 +31,19 @@ def head_to_destination(theta, robot_position, goal_position):
     return inplace_rotate(theta, rotation_val)
 
 
-def turn_corner_left():
-    update_motor_speed(input_omega=[-speed, 4 * speed // 5, -speed])
+def turn_corner_left(desired_heading):
+    if sense.degrees_equal(bug2_algorithm.robot_heading, desired_heading):
+        update_motor_speed(input_omega=[0, 0, 0])
+        return True
+    else:
+        update_motor_speed(input_omega=[-speed, 4 * speed // 5, -speed])
+        return False
 
 
-def turn_corner_right():
-    update_motor_speed(input_omega=[-4 * speed // 5, speed, speed])
+def turn_corner_right(desired_heading):
+    if sense.degrees_equal(bug2_algorithm.robot_heading, desired_heading):
+        update_motor_speed(input_omega=[0, 0, 0])
+        return True
+    else:
+        update_motor_speed(input_omega=[-4 * speed // 5, speed, speed])
+        return False
