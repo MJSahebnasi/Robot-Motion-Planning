@@ -3,6 +3,15 @@ from enum import Enum
 import bug2_algorithm
 import motion
 
+
+class Near_Wall_State(Enum):
+    parallel = 1
+    too_far = 2
+    too_close = 3
+
+
+near_wall_state = None
+
 wall_to_right = False
 wall_to_left = False
 previously_wall_to_right = False
@@ -16,6 +25,7 @@ rotate_final_degree = None
 def variable_setup():
     global rotate_final_degree
     global is_rotating
+    global near_wall_state
 
     # NEVER update stuff when robot is rotating
     if not is_rotating:
@@ -27,6 +37,15 @@ def variable_setup():
             rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
         if not bug2_algorithm.wall_in_front and not (wall_to_left or wall_to_right):
             rotate_final_degree = (bug2_algorithm.robot_heading + 180) % 360
+        left_fron_ir_value = bug2_algorithm.ir_value[1]
+        if left_fron_ir_value < 1000:
+            if left_fron_ir_value > 450:
+                near_wall_state = Near_Wall_State.too_far
+            elif left_fron_ir_value <= 450 and left_fron_ir_value >= 400:
+                near_wall_state = Near_Wall_State.parallel
+            else:
+                near_wall_state = Near_Wall_State.too_close
+        
 
 
 """assumes robot is already parallel to wall and state is set to "follow_wall" """
@@ -41,12 +60,19 @@ def wall_follow():
     global is_rotating
     global rotate_final_degree
 
+    global near_wall_state
+
     variable_setup()
 
     if not bug2_algorithm.wall_in_front and (wall_to_left or wall_to_right):
         # todo
         # move_parallel_to_wall_in_a_more_efficient_way()
-        motion.move_forward()
+        if near_wall_state == Near_Wall_State.parallel:
+            motion.move_forward()
+        elif near_wall_state == Near_Wall_State.too_close:
+            motion.move_forward_little_to_right()
+        elif near_wall_state == Near_Wall_State.too_far:
+            motion.move_forward_little_to_left()
     elif bug2_algorithm.wall_in_front and wall_to_left:
         # BUG: todo
         # this code needs separate state and execution parts as well

@@ -125,6 +125,8 @@ def bug2():
             bug2.state = Bug2_State.wall_follow
     elif bug2.state == Bug2_State.wall_follow:
         wall_follow.wall_follow()
+        for i in range(6):
+            print('IR{} {}'.format((i+1), ir_value[i]))
 
     # print('sonar: ', sonar_value)
     # print('ir: ', ir_value)
