@@ -36,7 +36,7 @@ def turn_corner_left(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-speed, 4 * speed // 5, -speed])
+        update_motor_speed(input_omega=[-12, 3, -6])
         return False
 
 
@@ -45,5 +45,5 @@ def turn_corner_right(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-4 * speed // 5, speed, speed])
+        update_motor_speed(input_omega=[- speed // 5, speed, speed])
         return False

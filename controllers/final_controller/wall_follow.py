@@ -26,7 +26,15 @@ def variable_setup():
             # rotation_dir = 'left'
             rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
         if not (bug2_algorithm.wall_in_front or wall_to_left or wall_to_right):
-            rotate_final_degree = (bug2_algorithm.robot_heading + 180) % 360
+            if previously_wall_to_left:
+                # rotation_dir = 'left'
+                rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
+            elif previously_wall_to_right:
+                # rotation_dir = 'left'
+                rotate_final_degree = (bug2_algorithm.robot_heading - 90) % 360
+            else:
+                for i in range(15):
+                    print('da hell?')
 
 
 """assumes robot is already parallel to wall and state is set to "follow_wall" """
@@ -46,7 +54,7 @@ def wall_follow():
     if not bug2_algorithm.wall_in_front and (wall_to_left or wall_to_right):
         # todo
         # move_parallel_to_wall_in_a_more_efficient_way()
-        motion.move_forward()
+
     elif bug2_algorithm.wall_in_front and wall_to_left:
         is_rotating = True
         done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
