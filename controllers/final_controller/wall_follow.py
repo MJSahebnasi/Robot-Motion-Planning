@@ -87,6 +87,7 @@ def wall_follow():
             done = motion.turn_corner_left(rotate_final_degree)
 
         if done:
+            is_rotating = False
             if previously_wall_to_right:
                 wall_to_right = True
             elif previously_wall_to_left:
