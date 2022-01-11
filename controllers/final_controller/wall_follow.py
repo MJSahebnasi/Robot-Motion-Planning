@@ -21,11 +21,15 @@ previously_wall_to_left = False
 is_rotating = False
 rotate_final_degree = None
 
+first_blindness_position = None
+
 
 def variable_setup():
     global rotate_final_degree
     global is_rotating
     global near_wall_state
+
+    global first_blindness_position
 
     # NEVER update stuff when robot is rotating
     if not is_rotating:
@@ -49,7 +53,7 @@ def variable_setup():
         if left_fron_ir_value < 1000:
             if left_fron_ir_value > 450:
                 near_wall_state = Near_Wall_State.too_far
-            elif left_fron_ir_value <= 450 and left_fron_ir_value >= 400:
+            elif 450 >= left_fron_ir_value >= 400:
                 near_wall_state = Near_Wall_State.parallel
             else:
                 near_wall_state = Near_Wall_State.too_close
@@ -72,8 +76,6 @@ def wall_follow():
     variable_setup()
 
     if not bug2_algorithm.wall_in_front and (wall_to_left or wall_to_right):
-        # todo
-        # move_parallel_to_wall_in_a_more_efficient_way()
         if near_wall_state == Near_Wall_State.parallel:
             motion.move_forward()
         elif near_wall_state == Near_Wall_State.too_close:
@@ -109,7 +111,7 @@ def wall_follow():
             # wall_to_left = False
 
     elif not (bug2_algorithm.wall_in_front or wall_to_left or wall_to_right):
-        is_rotating = True
+        # is_rotating = True
         done = False
         print('rot final deg', rotate_final_degree)
         print('heading', bug2_algorithm.robot_heading)
@@ -119,15 +121,9 @@ def wall_follow():
             done = motion.turn_corner_left(rotate_final_degree)
 
         if done:
-            print('done MF')
             is_rotating = False
-            # if previously_wall_to_right:
-            #     wall_to_right = True
-            # elif previously_wall_to_left:
-            #     wall_to_left = True
-            # else:
-            #     for i in range(15):
-            #         print('da hell?')
+            for i in range(15):
+                print('done rotate')
 
 
 wall_follow.state = None

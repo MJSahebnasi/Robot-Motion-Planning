@@ -9,11 +9,13 @@ rotate_speed = 4
 def move_forward():
     update_motor_speed(input_omega=[-speed, speed, 0])
 
+
 def move_forward_little_to_right():
-    update_motor_speed(input_omega=[-speed, speed+1, 0])
+    update_motor_speed(input_omega=[-speed, speed + 1, 0])
+
 
 def move_forward_little_to_left():
-    update_motor_speed(input_omega=[-speed-1, speed, 0])
+    update_motor_speed(input_omega=[-speed - 1, speed, 0])
 
 
 """ :param clockwise: 1 | anti-clockwise : -1 """
@@ -42,7 +44,7 @@ def turn_corner_left(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-12, 3, -6])
+        update_motor_speed(input_omega=[-7, 0, 0])
         return False
 
 
@@ -51,5 +53,5 @@ def turn_corner_right(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[- speed // 5, speed, speed])
+        update_motor_speed(input_omega=[7, 7, 7])  # todo
         return False

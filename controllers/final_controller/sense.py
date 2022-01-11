@@ -11,9 +11,8 @@ def get_bearing_in_degrees(compass_val):
     return bearing + 270
 
 
-def avoid_wall_in_front(front_sonar_val):
-    # IR is no good here
-    if front_sonar_val < 40:
+def avoid_wall_in_front(front_sonar_val, front_ir_val1, front_ir_val2):
+    if front_sonar_val < 40 or front_ir_val1 < 750 or front_ir_val2 < 750:
         # stop
         update_motor_speed(input_omega=[0, 0, 0])
         return True

@@ -55,7 +55,7 @@ def setup():
     # NEVER update stuff when robot is rotating
     if not is_rotating:
         # any wall around?
-        wall_in_front = avoid_wall_in_front(sonar_value[1])
+        wall_in_front = avoid_wall_in_front(sonar_value[1], ir_value[0], ir_value[3])
         # front-right IR
         if ir_value[5] < 1000:
             wall_follow.wall_to_right = True
@@ -125,11 +125,9 @@ def bug2():
             bug2.state = Bug2_State.wall_follow
     elif bug2.state == Bug2_State.wall_follow:
         wall_follow.wall_follow()
-        for i in range(6):
-            print('IR{} {}'.format((i+1), ir_value[i]))
 
-    # print('sonar: ', sonar_value)
-    # print('ir: ', ir_value)
+    print('sonar: ', sonar_value)
+    print('ir: ', ir_value)
     print(bug2.state)
     # print('heading: ', robot_heading)
     print('wall left: ', wall_follow.wall_to_left)

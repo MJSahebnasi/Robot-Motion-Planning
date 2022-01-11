@@ -24,5 +24,5 @@ if __name__ == "__main__":
         # bug1()
         bug2()
         # speed = 8
-        # update_motor_speed(input_omega=[-12,3,-6])
+        # update_motor_speed(input_omega=[-12,5.5,-6])
     pass
