@@ -20,6 +20,8 @@ def wall_follow():
     global rotate_final_degree
 
     if not bug2_algorithm.wall_in_front and (wall_to_left or wall_to_right):
+        # todo
+        # move_parallel_to_wall_in_a_more_complicated_way()
         motion.move_forward()
     elif bug2_algorithm.wall_in_front and wall_to_left:
         # rotation_dir = 'right'
