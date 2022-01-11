@@ -14,7 +14,7 @@ def move_forward():
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
-    if sense.degrees_equal(current_heading_degree, destination_degree):
+    if not sense.degrees_equal(current_heading_degree, destination_degree):
         update_motor_speed(input_omega=[rotate_speed * direction, rotate_speed * direction, rotate_speed * direction])
         return False
     else:
