@@ -20,7 +20,7 @@ def move_forward_little_to_left():
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
-    if sense.degrees_equal(current_heading_degree, destination_degree):
+    if not sense.degrees_equal(current_heading_degree, destination_degree):
         update_motor_speed(input_omega=[rotate_speed * direction, rotate_speed * direction, rotate_speed * direction])
         return False
     else:
@@ -42,7 +42,7 @@ def turn_corner_left(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-speed, 4 * speed // 5, -speed])
+        update_motor_speed(input_omega=[-12, 3, -6])
         return False
 
 
@@ -51,5 +51,5 @@ def turn_corner_right(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-4 * speed // 5, speed, speed])
+        update_motor_speed(input_omega=[- speed // 5, speed, speed])
         return False

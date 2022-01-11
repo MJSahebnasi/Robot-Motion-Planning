@@ -62,14 +62,14 @@ def setup():
         else:
             if wall_follow.wall_to_right:
                 wall_follow.previously_wall_to_right = True
-                wall_follow.wall_to_right = False
+            wall_follow.wall_to_right = False
         # front-left IR
         if ir_value[1] < 1000:
             wall_follow.wall_to_left = True
         else:
             if wall_follow.wall_to_left:
                 wall_follow.previously_wall_to_left = True
-                wall_follow.wall_to_left = False
+            wall_follow.wall_to_left = False
 
     if bug2.state == Bug2_State.line_follow and wall_in_front:
         bug2.prev_state = bug2.state
@@ -131,10 +131,13 @@ def bug2():
     # print('sonar: ', sonar_value)
     # print('ir: ', ir_value)
     print(bug2.state)
-    print('heading: ', robot_heading)
+    # print('heading: ', robot_heading)
     print('wall left: ', wall_follow.wall_to_left)
     print('wall right: ', wall_follow.wall_to_right)
     print('wall front: ', wall_in_front)
+    print('prev wall lef: ', wall_follow.previously_wall_to_left)
+    print('prev wall right: ', wall_follow.previously_wall_to_right)
+    # print('left ir: ', ir_value[1])
     print('-----')
 
 

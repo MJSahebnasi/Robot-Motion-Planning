@@ -21,4 +21,4 @@ def avoid_wall_in_front(front_sonar_val):
 
 
 def degrees_equal(deg1, deg2):
-    return abs(deg2 - deg1) > 0.5 or abs(deg2 - deg1) > 359.5
+    return abs(deg2 - deg1) < 0.5 or abs(deg2 - deg1) > 359.5

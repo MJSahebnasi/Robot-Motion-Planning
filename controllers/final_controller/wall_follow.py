@@ -35,8 +35,16 @@ def variable_setup():
         if bug2_algorithm.wall_in_front and wall_to_right:
             # rotation_dir = 'left'
             rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
-        if not bug2_algorithm.wall_in_front and not (wall_to_left or wall_to_right):
-            rotate_final_degree = (bug2_algorithm.robot_heading + 180) % 360
+        if not (bug2_algorithm.wall_in_front or wall_to_left or wall_to_right):
+            if previously_wall_to_left:
+                # rotation_dir = 'left'
+                rotate_final_degree = (bug2_algorithm.robot_heading + 90) % 360
+            elif previously_wall_to_right:
+                # rotation_dir = 'left'
+                rotate_final_degree = (bug2_algorithm.robot_heading - 90) % 360
+            else:
+                for i in range(15):
+                    print('da hell?')
         left_fron_ir_value = bug2_algorithm.ir_value[1]
         if left_fron_ir_value < 1000:
             if left_fron_ir_value > 450:
@@ -45,7 +53,6 @@ def variable_setup():
                 near_wall_state = Near_Wall_State.parallel
             else:
                 near_wall_state = Near_Wall_State.too_close
-        
 
 
 """assumes robot is already parallel to wall and state is set to "follow_wall" """
@@ -74,9 +81,6 @@ def wall_follow():
         elif near_wall_state == Near_Wall_State.too_far:
             motion.move_forward_little_to_left()
     elif bug2_algorithm.wall_in_front and wall_to_left:
-        # BUG: todo
-        # this code needs separate state and execution parts as well
-        # cannot set rotate_final_degree every time
         is_rotating = True
         done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
         bug2_algorithm.is_rotating = True
@@ -87,8 +91,8 @@ def wall_follow():
             bug2_algorithm.wall_in_front = False
             previously_wall_to_right = False
             previously_wall_to_left = True
-            wall_to_right = False
-            wall_to_left = True
+            # wall_to_right = False
+            # wall_to_left = True
 
     elif bug2_algorithm.wall_in_front and wall_to_right:
         is_rotating = True
@@ -101,26 +105,29 @@ def wall_follow():
             bug2_algorithm.wall_in_front = False
             previously_wall_to_right = True
             previously_wall_to_left = False
-            wall_to_right = True
-            wall_to_left = False
+            # wall_to_right = True
+            # wall_to_left = False
 
-    elif not bug2_algorithm.wall_in_front and not (wall_to_left or wall_to_right):
+    elif not (bug2_algorithm.wall_in_front or wall_to_left or wall_to_right):
         is_rotating = True
         done = False
+        print('rot final deg', rotate_final_degree)
+        print('heading', bug2_algorithm.robot_heading)
         if previously_wall_to_right:
             done = motion.turn_corner_right(rotate_final_degree)
         elif previously_wall_to_left:
             done = motion.turn_corner_left(rotate_final_degree)
 
         if done:
+            print('done MF')
             is_rotating = False
-            if previously_wall_to_right:
-                wall_to_right = True
-            elif previously_wall_to_left:
-                wall_to_left = True
-            else:
-                for i in range(15):
-                    print('da hell?')
+            # if previously_wall_to_right:
+            #     wall_to_right = True
+            # elif previously_wall_to_left:
+            #     wall_to_left = True
+            # else:
+            #     for i in range(15):
+            #         print('da hell?')
 
 
 wall_follow.state = None
