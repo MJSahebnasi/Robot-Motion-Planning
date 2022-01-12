@@ -11,11 +11,11 @@ def move_forward():
 
 
 def move_forward_little_to_right():
-    update_motor_speed(input_omega=[-speed, speed + 1, 0])
+    update_motor_speed(input_omega=[-speed, speed + 2, 0])
 
 
 def move_forward_little_to_left():
-    update_motor_speed(input_omega=[-speed - 1, speed, 0])
+    update_motor_speed(input_omega=[-speed - 2, speed, 0])
 
 
 """ :param clockwise: 1 | anti-clockwise : -1 """
@@ -34,7 +34,7 @@ def head_to_destination(theta, robot_position, goal_position):
     rotation_val = np.arctan2(goal_position[1] - robot_position[1], goal_position[0] - robot_position[0])
 
     # to degree & shift
-    rotation_val = rotation_val / math.pi * 180.0
+    rotation_val = (rotation_val / math.pi * 180.0) % 360
 
     return inplace_rotate(theta, rotation_val)
 

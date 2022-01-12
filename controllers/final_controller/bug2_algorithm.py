@@ -6,6 +6,7 @@ from initialization import *
 import motion
 from sense import *
 import wall_follow
+import final_controller
 
 
 class Bug2_State(Enum):
@@ -16,9 +17,6 @@ class Bug2_State(Enum):
     reached_destination = 5
     cannot_reach_destination = 6
 
-
-goal_position = np.array([1.3, 6.15])  # <x,y>
-initial_position = np.array([1.3, -9.74])
 
 threshold = 0.08
 
@@ -53,7 +51,8 @@ def setup():
     robot_heading = get_bearing_in_degrees(compass_val)
 
     # NEVER update stuff when robot is rotating
-    if not is_rotating:
+    if not is_rotating and not wall_follow.is_rotating:
+        # if (bug2.state == Bug2_State.wall_follow) or not is_rotating:
         # any wall around?
         wall_in_front = avoid_wall_in_front(sonar_value[1], ir_value[0], ir_value[3])
         # front-right IR
@@ -62,6 +61,7 @@ def setup():
         else:
             if wall_follow.wall_to_right:
                 wall_follow.previously_wall_to_right = True
+                wall_follow.previously_wall_to_left = False
             wall_follow.wall_to_right = False
         # front-left IR
         if ir_value[1] < 1000:
@@ -69,6 +69,7 @@ def setup():
         else:
             if wall_follow.wall_to_left:
                 wall_follow.previously_wall_to_left = True
+                wall_follow.previously_wall_to_right = False
             wall_follow.wall_to_left = False
 
     if bug2.state == Bug2_State.line_follow and wall_in_front:
@@ -104,7 +105,7 @@ def bug2():
     setup()
 
     if bug2.state == Bug2_State.init:
-        if motion.head_to_destination(robot_heading, gps_values, goal_position):
+        if motion.head_to_destination(robot_heading, gps_values, final_controller.goal_position):
             bug2.prev_state = bug2.state
             bug2.state = Bug2_State.line_follow
     elif bug2.state == Bug2_State.line_follow:
@@ -126,14 +127,14 @@ def bug2():
     elif bug2.state == Bug2_State.wall_follow:
         wall_follow.wall_follow()
 
-    print('sonar: ', sonar_value)
-    print('ir: ', ir_value)
+    # print('sonar: ', sonar_value)
+    # print('ir: ', ir_value)
     print(bug2.state)
-    # print('heading: ', robot_heading)
+    print('heading: ', robot_heading)
     print('wall left: ', wall_follow.wall_to_left)
     print('wall right: ', wall_follow.wall_to_right)
     print('wall front: ', wall_in_front)
-    print('prev wall lef: ', wall_follow.previously_wall_to_left)
+    print('prev wall left: ', wall_follow.previously_wall_to_left)
     print('prev wall right: ', wall_follow.previously_wall_to_right)
     # print('left ir: ', ir_value[1])
     print('-----')
