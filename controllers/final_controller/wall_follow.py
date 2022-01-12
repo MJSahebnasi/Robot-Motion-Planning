@@ -4,13 +4,19 @@ import bug2_algorithm
 import motion
 
 
-class Near_Wall_State(Enum):
-    parallel = 1
+class Near_Left_Wall_State(Enum):
+    middle = 1
     too_far = 2
     too_close = 3
 
+near_left_wall_state = None
 
-near_wall_state = None
+class Near_Right_Wall_State(Enum):
+    middle = 1
+    too_far = 2
+    too_close = 3
+
+near_right_wall_state = None
 
 wall_to_right = False
 wall_to_left = False
@@ -28,7 +34,8 @@ first_blindness_position = None
 def variable_setup():
     global rotate_final_degree
     global is_rotating
-    global near_wall_state
+    global near_left_wall_state
+    global near_right_wall_state
 
     global first_blindness_position
     global is_blind
@@ -65,11 +72,20 @@ def variable_setup():
         left_front_ir_value = bug2_algorithm.ir_value[1]
         if left_front_ir_value < 1000:
             if left_front_ir_value > 450:
-                near_wall_state = Near_Wall_State.too_far
+                near_left_wall_state = Near_Left_Wall_State.too_far
             elif 450 >= left_front_ir_value >= 400:
-                near_wall_state = Near_Wall_State.parallel
+                near_left_wall_state = Near_Left_Wall_State.middle
             else:
-                near_wall_state = Near_Wall_State.too_close
+                near_left_wall_state = Near_Left_Wall_State.too_close
+
+        right_front_ir_value = bug2_algorithm.ir_value[5]
+        if right_front_ir_value < 1000:
+            if right_front_ir_value > 450:
+                near_right_wall_state = Near_Right_Wall_State.too_far
+            elif 450 >= right_front_ir_value >= 400:
+                near_right_wall_state = Near_Right_Wall_State.middle
+            else:
+                near_right_wall_state = Near_Right_Wall_State.too_close
 
 
 """assumes robot is already parallel to wall and state is set to "follow_wall" """
@@ -85,18 +101,27 @@ def wall_follow():
     global is_blind
     global rotate_final_degree
 
-    global near_wall_state
+    global near_left_wall_state
+    global near_right_wall_state
 
     variable_setup()
 
-    if not bug2_algorithm.wall_in_front and (wall_to_left or wall_to_right):
-        print('follow')
-        if near_wall_state == Near_Wall_State.parallel:
+    if not bug2_algorithm.wall_in_front and wall_to_left:
+        print('follow left wall')
+        if near_left_wall_state == Near_Left_Wall_State.middle:
             motion.move_forward()
-        elif near_wall_state == Near_Wall_State.too_close:
+        elif near_left_wall_state == Near_Left_Wall_State.too_close:
             motion.move_forward_little_to_right()
-        elif near_wall_state == Near_Wall_State.too_far:
+        elif near_left_wall_state == Near_Left_Wall_State.too_far:
             motion.move_forward_little_to_left()
+    elif not bug2_algorithm.wall_in_front and wall_to_right:
+        print('follow right wall')
+        if near_right_wall_state == Near_Right_Wall_State.middle:
+            motion.move_forward()
+        elif near_right_wall_state == Near_Right_Wall_State.too_close:
+            motion.move_forward_little_to_left()
+        elif near_right_wall_state == Near_Right_Wall_State.too_far:
+            motion.move_forward_little_to_right()
     elif bug2_algorithm.wall_in_front and wall_to_left:
         print('inplace right')
         is_rotating = True
