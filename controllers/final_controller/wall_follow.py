@@ -108,6 +108,8 @@ def wall_follow():
 
     if not bug2_algorithm.wall_in_front and wall_to_left:
         print('follow left wall')
+        is_rotating = False
+        bug2_algorithm.is_rotating = False
         if near_left_wall_state == Near_Left_Wall_State.middle:
             motion.move_forward()
         elif near_left_wall_state == Near_Left_Wall_State.too_close:
@@ -116,6 +118,8 @@ def wall_follow():
             motion.move_forward_little_to_left()
     elif not bug2_algorithm.wall_in_front and wall_to_right:
         print('follow right wall')
+        is_rotating = False
+        bug2_algorithm.is_rotating = False
         if near_right_wall_state == Near_Right_Wall_State.middle:
             motion.move_forward()
         elif near_right_wall_state == Near_Right_Wall_State.too_close:
@@ -140,7 +144,7 @@ def wall_follow():
     elif bug2_algorithm.wall_in_front and wall_to_right:
         print('inplace left')
         is_rotating = True
-        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
+        done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree, -1)
         bug2_algorithm.is_rotating = True
 
         if done:

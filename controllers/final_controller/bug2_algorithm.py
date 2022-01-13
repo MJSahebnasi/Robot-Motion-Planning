@@ -52,7 +52,6 @@ def setup():
 
     # NEVER update stuff when robot is rotating
     if not is_rotating and not wall_follow.is_rotating:
-        # if (bug2.state == Bug2_State.wall_follow) or not is_rotating:
         # any wall around?
         wall_in_front = avoid_wall_in_front(sonar_value[1], ir_value[0], ir_value[3])
         # front-right IR
@@ -79,6 +78,7 @@ def setup():
 
         # set rotate_final_degree
         rotation_dir = choice(['left', 'right'])
+        # rotation_dir = 'left'
         rotation_dir = 'right'
         if rotation_dir == 'left':
             rotate_final_degree = (robot_heading + 90) % 360
@@ -136,6 +136,8 @@ def bug2():
     print('wall front: ', wall_in_front)
     print('prev wall left: ', wall_follow.previously_wall_to_left)
     print('prev wall right: ', wall_follow.previously_wall_to_right)
+    print('bug is rot: ', is_rotating)
+    print('wall_f is rot: ', wall_follow.is_rotating)
     # print('left ir: ', ir_value[1])
     print('-----')
 
