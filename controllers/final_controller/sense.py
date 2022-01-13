@@ -21,3 +21,8 @@ def avoid_wall_in_front(front_sonar_val, front_ir_val1, front_ir_val2):
 
 def degrees_equal(deg1, deg2):
     return abs(deg2 - deg1) < 0.5 or abs(deg2 - deg1) > 359.5
+
+
+def calculate_distance_to_goal(gps_values, goal_position):
+    return math.sqrt((gps_values[0] - goal_position[0]) ** 2 + (
+            gps_values[1] - goal_position[1]) ** 2)

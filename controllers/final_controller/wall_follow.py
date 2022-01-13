@@ -175,6 +175,8 @@ def wall_follow():
     elif bug2_algorithm.wall_in_front and not (wall_to_left or wall_to_right):
         if previously_wall_to_left:
             motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
+        else:
+            motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree, -1)
 
 
 wall_follow.state = None
