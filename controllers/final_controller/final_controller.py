@@ -5,6 +5,7 @@
 
 import numpy as np
 
+import bug1_algorithm
 import bug2_algorithm
 import bug0_algorithm
 from initialization import *
@@ -14,7 +15,7 @@ from sense import *
 goal_position = np.array([1.3, 6.15])  # <x,y>
 initial_position = [1.3, -9.74]
 # initial_position = [-7, 15]
-algo_select = 0
+algo_select = 2
 
 if __name__ == "__main__":
 
@@ -27,7 +28,7 @@ if __name__ == "__main__":
             if bug0_algorithm.bug0():
                 break
         elif algo_select == 1:
-            print('bug1')
+            bug1_algorithm.bug1()
         elif algo_select == 2:
             if bug2_algorithm.bug2():
                 break
