@@ -6,6 +6,7 @@
 import numpy as np
 
 import bug2_algorithm
+import bug0_algorithm
 from initialization import *
 from motion import *
 from sense import *
@@ -13,6 +14,7 @@ from sense import *
 goal_position = np.array([1.3, 6.15])  # <x,y>
 initial_position = [1.3, -9.74]
 # initial_position = [-7, 15]
+algo_select = 0
 
 if __name__ == "__main__":
 
@@ -21,11 +23,12 @@ if __name__ == "__main__":
     init_robot_state(in_pos=[0, 0, 0], in_omega=[0, 0, 0])
 
     while robot.step(TIME_STEP) != -1:
-        # bug0()
-        # bug1()
-        # bug1_algorithm_v1.bug2()
-        if bug2_algorithm.bug2():
-            break
-        # speed = 8
-        # update_motor_speed(input_omega=[-12,5.5,-6])
+        if algo_select == 0:
+            if bug0_algorithm.bug0():
+                break
+        elif algo_select == 1:
+            print('bug1')
+        elif algo_select == 2:
+            if bug2_algorithm.bug2():
+                break
     pass
