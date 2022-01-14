@@ -15,7 +15,7 @@ from sense import *
 goal_position = np.array([1.3, 6.15])  # <x,y>
 initial_position = [1.3, -9.74]
 # initial_position = [-7, 15]
-algo_select = 2
+algo_select = 1
 
 if __name__ == "__main__":
 

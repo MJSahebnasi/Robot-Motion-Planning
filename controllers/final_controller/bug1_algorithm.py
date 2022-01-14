@@ -40,10 +40,13 @@ rotation_dir = None
 is_rotating = False
 
 tic = 0
+
+
 def update_least_distance():
     global least_distance
     global tic
-    distance = ( (gps_values[0] - final_controller.goal_position[0])**2 + (gps_values[1] - final_controller.goal_position[1])**2 )**(0.5)
+    distance = ((gps_values[0] - final_controller.goal_position[0]) ** 2 + (
+                gps_values[1] - final_controller.goal_position[1]) ** 2) ** (0.5)
     if distance < least_distance:
         least_distance = distance
         tic = time.perf_counter()
@@ -60,9 +63,7 @@ def update_least_distance():
                 bug1.prev_state = bug1.state
                 bug1.state = Bug1_State.line_follow
 
-
     print("Done! : Least distance so far:", least_distance)
-
 
 
 def setup():
@@ -126,9 +127,8 @@ def bug1():
         return
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
-    
-    setup()
 
+    setup()
 
     if bug1.state == Bug1_State.init:
         if motion_bug1.head_to_destination(robot_heading, gps_values, final_controller.goal_position):
@@ -168,7 +168,7 @@ def bug1():
     print('bug is rot: ', is_rotating)
     print('wall_f is rot: ', wall_follow_bug1.is_rotating)
     print("GPS data: ", gps_values)
-    
+
     update_least_distance()
 
     # print('left ir: ', ir_value[1])
