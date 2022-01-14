@@ -11,14 +11,14 @@ def move_forward():
 
 
 def move_forward_little_to_right():
-    update_motor_speed(input_omega=[-speed, speed + 0.5 , 0])
+    update_motor_speed(input_omega=[-speed, speed + 2 , 0])
 
 
 def move_forward_little_to_left():
-    update_motor_speed(input_omega=[-speed - 0.5, speed, 0])
+    update_motor_speed(input_omega=[-speed - 2, speed, 0])
 
 
-""" :param clockwise: 1 | anti-clockwise : -1 """
+""" :param direction: clockwise: 1 | anti-clockwise : -1 """
 
 
 def inplace_rotate(current_heading_degree, destination_degree, direction=1):
@@ -36,7 +36,13 @@ def head_to_destination(theta, robot_position, goal_position):
     # to degree & shift
     rotation_val = (rotation_val / math.pi * 180.0) % 360
 
-    return inplace_rotate(theta, rotation_val)
+    # smart direction
+    if (theta - rotation_val) % 360 < 180:
+        dir = 1
+    else:
+        dir = -1
+
+    return inplace_rotate(theta, rotation_val, dir)
 
 
 def turn_corner_left(desired_heading):

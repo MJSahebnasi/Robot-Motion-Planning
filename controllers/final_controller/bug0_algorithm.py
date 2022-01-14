@@ -15,8 +15,9 @@ class Bug0_State(Enum):
     get_upright = 3
     get_parallel_to_wall = 4
     wall_follow = 5
-    reached_destination = 6
-    cannot_reach_destination = 7
+    finalizing = 6
+    reached_destination = 7
+    cannot_reach_destination = 8
 
 
 threshold = 0.08
@@ -50,6 +51,13 @@ def setup():
 
     global robot_heading
     robot_heading = get_bearing_in_degrees(compass_val)
+
+    # check if we've reached the goal
+    dist = sense.calculate_distance_to_goal(gps_values, final_controller.goal_position)
+    if dist < 0.1:
+        rotate_final_degree = 180
+        bug0.state = Bug0_State.finalizing
+        return
 
     # NEVER update stuff when robot is rotating
     if not is_rotating and not wall_follow_bug0.is_rotating:
@@ -108,12 +116,18 @@ def bug0():
     global rotation_dir
     global rotate_final_degree
 
-    if bug0.state == Bug0_State.reached_destination or bug0.state == Bug0_State.cannot_reach_destination:
-        return
+    if bug0.state == Bug0_State.reached_destination:
+        return True
+    elif bug0.state == Bug0_State.cannot_reach_destination:
+        return False
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
 
     setup()
+
+    if bug0.state == Bug0_State.finalizing:
+        if motion.inplace_rotate(robot_heading, rotate_final_degree):
+            bug0.state = Bug0_State.reached_destination
 
     if bug0.state == Bug0_State.init:
         if motion.head_to_destination(robot_heading, gps_values, final_controller.goal_position):
