@@ -127,7 +127,7 @@ def wall_follow():
         elif near_right_wall_state == Near_Right_Wall_State.too_far:
             motion.move_forward_little_to_right()
     elif bug2_algorithm.wall_in_front and wall_to_left:
-        print('inplace right')
+        # print('inplace right')
         is_rotating = True
         done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree)
         bug2_algorithm.is_rotating = True
@@ -142,7 +142,7 @@ def wall_follow():
             # wall_to_left = True
 
     elif bug2_algorithm.wall_in_front and wall_to_right:
-        print('inplace left')
+        # print('inplace left')
         is_rotating = True
         done = motion.inplace_rotate(bug2_algorithm.robot_heading, rotate_final_degree, -1)
         bug2_algorithm.is_rotating = True
@@ -161,8 +161,8 @@ def wall_follow():
         is_blind = True
         # is_rotating = True
         done = False
-        print('rot final deg', rotate_final_degree)
-        print('heading', bug2_algorithm.robot_heading)
+        # print('rot final deg', rotate_final_degree)
+        # print('heading', bug2_algorithm.robot_heading)
         if previously_wall_to_right:
             done = motion.turn_corner_right(rotate_final_degree)
         elif previously_wall_to_left:
