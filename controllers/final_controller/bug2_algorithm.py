@@ -78,8 +78,8 @@ def setup():
 
         # set rotate_final_degree
         rotation_dir = choice(['left', 'right'])
-        # rotation_dir = 'left'
-        rotation_dir = 'right'
+        rotation_dir = 'left'
+        # rotation_dir = 'right'
         if rotation_dir == 'left':
             rotate_final_degree = (robot_heading + 90) % 360
         else:

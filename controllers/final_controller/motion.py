@@ -11,11 +11,11 @@ def move_forward():
 
 
 def move_forward_little_to_right():
-    update_motor_speed(input_omega=[-speed, speed + 2, 0])
+    update_motor_speed(input_omega=[-speed, speed + 0.5 , 0])
 
 
 def move_forward_little_to_left():
-    update_motor_speed(input_omega=[-speed - 2, speed, 0])
+    update_motor_speed(input_omega=[-speed - 0.5, speed, 0])
 
 
 """ :param clockwise: 1 | anti-clockwise : -1 """
@@ -44,14 +44,19 @@ def turn_corner_left(desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[-7, 0, 0])
+        update_motor_speed(input_omega=[-speed, 0, 0])
         return False
 
+def turn_corner_left_no_dest():
+    update_motor_speed(input_omega=[-speed, 0, 0])
 
 def turn_corner_right(desired_heading):
     if sense.degrees_equal(bug2_algorithm.robot_heading, desired_heading):
         update_motor_speed(input_omega=[0, 0, 0])
         return True
     else:
-        update_motor_speed(input_omega=[0, 7, 0])
+        update_motor_speed(input_omega=[0, speed, 0])
         return False
+
+def turn_corner_right_no_dest():
+    update_motor_speed(input_omega=[0, speed, 0])
