@@ -6,6 +6,7 @@
 import numpy as np
 
 import bug2_algorithm
+import bug1_algorithm
 from initialization import *
 from motion import *
 from sense import *
@@ -23,9 +24,9 @@ if __name__ == "__main__":
     while robot.step(TIME_STEP) != -1:
         # bug0()
         # bug1()
-        # bug1_algorithm_v1.bug2()
-        if bug2_algorithm.bug2():
-            break
+        bug1_algorithm.bug1()
+        # if bug2_algorithm.bug2():
+        #     break
         # speed = 8
         # update_motor_speed(input_omega=[-12,5.5,-6])
     pass
