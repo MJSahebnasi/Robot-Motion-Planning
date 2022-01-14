@@ -15,8 +15,9 @@ class Bug2_State(Enum):
     line_follow = 2
     get_parallel_to_wall = 3
     wall_follow = 4
-    reached_destination = 5
-    cannot_reach_destination = 6
+    finalizing = 5
+    reached_destination = 6
+    cannot_reach_destination = 7
 
 
 threshold = 0.08
@@ -76,6 +77,13 @@ def setup():
     global new_leave_distance
     global line_m
     global last_hit_pos
+
+    # check if we've reached the goal
+    dist = sense.calculate_distance_to_goal(gps_values, final_controller.goal_position)
+    if dist < 0.1:
+        rotate_final_degree = 180
+        bug2.state = Bug2_State.finalizing
+        return
 
     # set line_m
     if line_m is None:
@@ -169,23 +177,19 @@ def bug2():
     global encoder_value
     global ir_value
 
+    global finalizing
+
     if bug2.state == Bug2_State.reached_destination:
         return True
-    elif  bug2.state == Bug2_State.cannot_reach_destination:
+    elif bug2.state == Bug2_State.cannot_reach_destination:
         return False
 
     gps_values, compass_val, sonar_value, encoder_value, ir_value = read_sensors_values()
 
     setup()
 
-    # check if we've reached the goal
-    if sense.calculate_distance_to_goal(gps_values, final_controller.goal_position) < 1 and (
-            not bug2.state == Bug2_State.reached_destination):
-        if robot_heading < 180:
-            done = motion.inplace_rotate(robot_heading, 180)
-        else:
-            done = motion.inplace_rotate(robot_heading, 180, -1)
-        if done:
+    if bug2.state == Bug2_State.finalizing:
+        if motion.inplace_rotate(robot_heading, rotate_final_degree):
             bug2.state = Bug2_State.reached_destination
 
     if bug2.state == Bug2_State.init:

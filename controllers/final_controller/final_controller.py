@@ -6,7 +6,6 @@
 import numpy as np
 
 import bug2_algorithm
-import bug1_algorithm_v1
 from initialization import *
 from motion import *
 from sense import *
