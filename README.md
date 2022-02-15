@@ -29,3 +29,7 @@ You can see the main idea of each algorithm in these diagrams:
 
 ## How to run the simulation
 Open the world file (worlds/current.wbt) in [Webots](https://cyberbotics.com/).
+
+<br/><br/>
+<br/><br/>
+**todo** : refactor and duplicate code elimination :)
